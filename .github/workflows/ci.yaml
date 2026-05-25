@@ -3,16 +3,17 @@ name: CI pipeline
 on:
   pull_request:
     paths:
-      - "dbt/**"
-      - "requirements.txt"
+      - "**.sql"
+      - "dbt_project/**"
 
 jobs:
   lint:
     name: SQLFluff Lint
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,4 +25,4 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run SQLFluff lint
-        run: sqlfluff lint dbt/models/
+        run: sqlfluff lint dbt_project/models/
