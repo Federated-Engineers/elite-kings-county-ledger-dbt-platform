@@ -1,2 +1,4 @@
-SELECT id, order_date
+SELECT
+    id,
+    customer_id
 FROM orders
