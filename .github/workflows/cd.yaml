@@ -1,0 +1,49 @@
+name: CD pipeline
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "kings_county_dbt_project/**"
+      - "requirements.txt"
+
+env:
+  AWS_REGION: eu-central-1
+
+jobs:
+  build-push-image:
+    name: Build, Verify and Push Docker Image
+    runs-on: ubuntu-24.04
+
+    permissions:
+      id-token: write
+      contents: read
+      
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v6.1.0
+      with:
+        role-to-assume: ${{ secrets.OIDC_ROLE }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: STS GetCallerIdentity
+      run: aws sts get-caller-identity
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        REPOSITORY: elite-kings-county-ledger-dbt
+        IMAGE_TAG: latest
+      
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
