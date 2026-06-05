@@ -1,0 +1,13 @@
+elite-kings-county-ledger-dbt:
+  outputs:
+    dev:
+      account: UJYDCFM-ZZ49269
+      database: ELITE_KINGS_COUNTY_LEDGER
+      password: "{{ env_var('ELITE_KINGS_COUNTY_SNOWFLAKE_PASSWORD') }}"
+      role: ACCOUNTADMIN
+      schema: L1_LANDING
+      threads: 1
+      type: snowflake
+      user: THEJOYVICTOR
+      warehouse: transforming
+  target: dev
