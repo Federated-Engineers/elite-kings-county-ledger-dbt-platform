@@ -2,11 +2,11 @@ elite-kings-county-ledger-dbt:
   outputs:
     dev:
       account: UJYDCFM-ZZ49269
-      database: ELITE_KINGS_COUNTY
+      database: SLEEKMART_OMS
       password: "{{ env_var('ELITE_KINGS_COUNTY_SNOWFLAKE_PASSWORD') }}"
       role: ACCOUNTADMIN
       schema: L1_LANDING
-      threads: 1
+      threads: 4
       type: snowflake
       user: THEJOYVICTOR
       warehouse: transforming

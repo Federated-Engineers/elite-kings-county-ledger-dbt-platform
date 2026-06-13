@@ -1,0 +1,3 @@
+SELECT customerid, firstname, lastname
+FROM SLEEKMART_OMS.L1_LANDING.CUSTOMERS
+LIMIT 10

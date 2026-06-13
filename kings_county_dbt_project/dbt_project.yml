@@ -1,0 +1,16 @@
+name: 'elite_kings_county_ledger_dbt'
+version: '1.0.0'
+
+profile: 'elite-kings-county-ledger-dbt'
+
+model-paths: ["models"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+models:
+  elite_kings_county_ledger_dbt:
+    transformed:
+      +schema: transformed
+      +materialized: table
