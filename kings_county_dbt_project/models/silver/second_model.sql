@@ -1,2 +1,4 @@
-SELECT city, zipcode
-FROM SLEEKMART_OMS.L1_LANDING.CUSTOMERS
+SELECT
+    city,
+    zipcode
+FROM sleekmart_oms.l1_landing.customers
