@@ -1,0 +1,6 @@
+elite-kings-county-ledger-dbt:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      threads: 4
