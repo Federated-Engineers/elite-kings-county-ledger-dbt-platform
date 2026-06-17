@@ -10,7 +10,7 @@ terraform {
 provider "snowflake" {
     organization_name = "UJYDCFM"
     account_name      = "ZZ49269"
-    user              = "THEJOYVICTOR"
+    user              = "ATLANTIS_ADMIN_USER"
     password          = "FEDERATEDatlantisADMIN1"
     role              = "ATLANTIS_ADMIN_ROLE"
 }
