@@ -11,6 +11,6 @@ provider "snowflake" {
     organization_name = "UJYDCFM"
     account_name      = "ZZ49269"
     user              = "THEJOYVICTOR"
-    password          = "FEDERATEDsnowflake1"
-    role              = "ACCOUNTADMIN"
+    password          = "FEDERATEDatlantisADMIN1"
+    role              = "ATLANTIS_ADMIN_USER"
 }
