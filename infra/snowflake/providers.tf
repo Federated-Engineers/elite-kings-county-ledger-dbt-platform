@@ -7,4 +7,10 @@ terraform {
   }
 }
 
-provider "snowflake" {}
+provider "snowflake" {
+    organization_name = "UJYDCFM"
+    account_name      = "ZZ49269"
+    user              = "THEJOYVICTOR"
+    password          = "FEDERATEDatlantis1"
+    role              = "ATLANTIS_ROLE"
+}
