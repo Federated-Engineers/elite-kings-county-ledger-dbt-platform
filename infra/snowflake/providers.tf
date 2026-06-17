@@ -7,4 +7,10 @@ terraform {
   }
 }
 
-provider "snowflake" {}
+provider "snowflake" {
+  organization_name = var.SNOWFLAKE_ORGANIZATION_NAME
+  account_name      = var.SNOWFLAKE_ACCOUNT_NAME
+  user              = var.SNOWFLAKE_USER
+  password          = var.SNOWFLAKE_PASSWORD
+  role              = var.SNOWFLAKE_ROLE
+}
