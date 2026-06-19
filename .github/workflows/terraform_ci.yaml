@@ -1,0 +1,27 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    paths:
+      - "snowflake_infra/**"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run:
+        working-directory: snowflake_infra/production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+
+      - name: Terraform validate
+        run: terraform validate
