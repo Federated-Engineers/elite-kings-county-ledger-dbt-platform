@@ -12,13 +12,7 @@ terraform {
   }
 }
 
-provider "snowflake" {
-  organization_name = "UJYDCFM"
-  account_name      = "ZZ49269"
-  user              = "ATLANTIS_ADMIN_USER"
-  password          = "FEDERATEDatlantisADMIN1"
-  role              = "ATLANTIS_ADMIN_ROLE"
-}
+provider "snowflake" {}
 
 provider "aws" {
   region = "eu-central-1"
