@@ -3,7 +3,7 @@ resource "snowflake_resource_monitor" "rm" {
   credit_quota = 5
   frequency    = "MONTHLY"
 
-  start_timestamp = "2026-07-19 00:00:00"
+  start_timestamp           = "2026-07-19 00:00:00"
   notify_triggers           = [50, 75]
   suspend_trigger           = 90
   suspend_immediate_trigger = 100

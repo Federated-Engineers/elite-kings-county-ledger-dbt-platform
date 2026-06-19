@@ -21,7 +21,7 @@ resource "snowflake_grant_privileges_to_account_role" "ecs_all_tables_future" {
     }
   }
 }
-    
+
 resource "snowflake_grant_privileges_to_account_role" "ecs_all_views_existing" {
   account_role_name = snowflake_account_role.ecs.name
   all_privileges    = true

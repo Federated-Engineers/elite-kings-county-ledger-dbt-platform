@@ -12,7 +12,7 @@ resource "snowflake_grant_privileges_to_account_role" "analyst_gold_schema" {
   privileges        = ["USAGE"]
 
   on_schema {
-      schema_name = "PROD_DB.GOLD"
+    schema_name = "PROD_DB.GOLD"
   }
 }
 

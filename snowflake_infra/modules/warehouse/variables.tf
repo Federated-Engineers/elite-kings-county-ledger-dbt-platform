@@ -1,5 +1,5 @@
 variable "wh_name" {
-    type = string
+  type = string
 }
 
 output "wh_name" {
