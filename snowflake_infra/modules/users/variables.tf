@@ -14,3 +14,7 @@ variable "default_role" {
 variable "default_warehouse" {
   type = string
 }
+
+output "user_name" {
+  value = snowflake_user.user.name
+}
