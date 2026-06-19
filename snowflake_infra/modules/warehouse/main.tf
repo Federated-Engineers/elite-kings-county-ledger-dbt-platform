@@ -1,5 +1,5 @@
 resource "snowflake_warehouse" "wh" {
-    name = var.name
+    name = var.wh_name
     warehouse_size = "X-SMALL"
     
     auto_suspend = 300
@@ -8,5 +8,5 @@ resource "snowflake_warehouse" "wh" {
     initially_suspended = true
     resource_monitor = snowflake_resource_monitor.rm.name
 
-    comment = "Warehouse for ${var.name}"
+    comment = "Warehouse for ${var.wh_name}"
 }
