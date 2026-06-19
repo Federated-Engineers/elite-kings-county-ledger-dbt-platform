@@ -1,7 +1,7 @@
 resource "snowflake_database" "db" {
   name      = var.database_name
   log_level = "INFO"
-  comment   = var.comment
+  comment   = "Production database"
 }
 
 resource "snowflake_schema" "schemas" {

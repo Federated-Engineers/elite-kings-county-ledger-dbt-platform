@@ -1,4 +1,4 @@
-resource "snowflake_user" "this" {
+resource "snowflake_user" "user" {
   name         = var.name
   display_name = var.name
 
