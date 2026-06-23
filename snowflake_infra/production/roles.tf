@@ -9,3 +9,7 @@ resource "snowflake_account_role" "engineer" {
 resource "snowflake_account_role" "ecs" {
   name = "ECS_ROLE"
 }
+
+resource "snowflake_account_role" "platform" {
+  name = "PLATFORM_ROLE"
+}

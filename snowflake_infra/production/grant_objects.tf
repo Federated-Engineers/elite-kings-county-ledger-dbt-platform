@@ -98,7 +98,7 @@ resource "snowflake_grant_privileges_to_account_role" "analyst_gold_views_future
 # ENGINEER objects
 resource "snowflake_grant_privileges_to_account_role" "engineer_gold_tables_existing" {
   account_role_name = snowflake_account_role.engineer.name
-  privileges        = ["INSERT", "UPDATE"]
+  privileges        = ["CREATE", "SELECT", "INSERT", "UPDATE"]
 
   on_schema_object {
     all {
@@ -110,11 +110,35 @@ resource "snowflake_grant_privileges_to_account_role" "engineer_gold_tables_exis
 
 resource "snowflake_grant_privileges_to_account_role" "engineer_gold_tables_future" {
   account_role_name = snowflake_account_role.engineer.name
-  privileges        = ["INSERT", "UPDATE"]
+  privileges        = ["CREATE", "SELECT", "INSERT", "UPDATE"]
 
   on_schema_object {
     future {
       object_type_plural = "TABLES"
+      in_schema          = "PROD_DB.GOLD"
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "engineer_gold_views_existing" {
+  account_role_name = snowflake_account_role.engineer.name
+  privileges        = ["CREATE", "SELECT"]
+
+  on_schema_object {
+    all {
+      object_type_plural = "VIEWS"
+      in_schema          = "PROD_DB.GOLD"
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "engineer_gold_views_future" {
+  account_role_name = snowflake_account_role.engineer.name
+  privileges        = ["CREATE", "SELECT"]
+
+  on_schema_object {
+    future {
+      object_type_plural = "VIEWS"
       in_schema          = "PROD_DB.GOLD"
     }
   }

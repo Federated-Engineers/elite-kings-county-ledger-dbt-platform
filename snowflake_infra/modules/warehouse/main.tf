@@ -6,7 +6,5 @@ resource "snowflake_warehouse" "wh" {
   auto_resume  = true
 
   initially_suspended = true
-  resource_monitor    = snowflake_resource_monitor.rm.name
-
-  comment = "Warehouse for ${var.wh_name}"
+  comment             = "Warehouse for ${var.wh_name}"
 }
