@@ -14,17 +14,15 @@ jobs:
         working-directory: snowflake_infra/production
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./snowflake_infra/production
 
-      - name: Terraform fmt
-        run: terraform fmt -check -recursive
-
-      - name: Terraform init
-        run: terraform init -backend=false
-
-      - name: Terraform validate
-        run: terraform validate
+      - name: terraform validate
+        uses: dflook/terraform-validate@v2
+        with:
+          path: ./snowflake_infra/production

@@ -1,6 +1,6 @@
 resource "snowflake_resource_monitor" "rm" {
   name         = "${var.wh_name}_RM"
-  credit_quota = 5
+  credit_quota = var.resource_monitor_credit_quota
   frequency    = "MONTHLY"
 
   start_timestamp           = "2026-07-19 00:00:00"
