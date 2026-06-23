@@ -6,3 +6,4 @@
 *.tfstate.*
 .terraform/
 .terraform.lock.hcl
+snowflake_infra/production/variables.tf
