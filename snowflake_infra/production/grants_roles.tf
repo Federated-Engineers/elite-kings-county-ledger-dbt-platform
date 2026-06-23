@@ -1,8 +1,3 @@
-resource "snowflake_grant_account_role" "analyst_to_parent_engineer" {
-  role_name        = snowflake_account_role.analyst.name
-  parent_role_name = snowflake_account_role.engineer.name
-}
-
 resource "snowflake_grant_account_role" "analyst_to_user" {
   role_name = snowflake_account_role.analyst.name
   user_name = module.analyst_user.user_name
