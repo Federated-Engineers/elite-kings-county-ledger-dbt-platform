@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "snowflake" {
-  
+
   preview_features_enabled = ["snowflake_storage_integration_aws_resource"]
 }
 
