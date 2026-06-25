@@ -1,5 +1,5 @@
 resource "snowflake_storage_integration_aws" "storage_integration" {
-  name             = "PROD_S3_RAW_STORAGE_INTEGRATION"
+  name             = "PROD_S3_STORAGE_INTEGRATION"
   enabled          = true
   storage_provider = "S3"
 
