@@ -12,7 +12,10 @@ terraform {
   }
 }
 
-provider "snowflake" {}
+provider "snowflake" {
+  
+  preview_features_enabled = ["snowflake_storage_integration_aws_resource"]
+}
 
 provider "aws" {
   region = "eu-central-1"
