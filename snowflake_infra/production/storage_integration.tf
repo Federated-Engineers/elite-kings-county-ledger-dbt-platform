@@ -10,7 +10,7 @@ resource "snowflake_storage_integration_aws" "storage_integration" {
 resource "snowflake_stage_external_s3" "stage" {
   name                = "BRONZE_STAGE"
   database            = "PROD_DB"
-  schema              = "GOLD"
+  schema              = "BRONZE"
   url                 = "s3://kings-county-raw-ingestion/raw/"
   storage_integration = snowflake_storage_integration_aws.storage_integration.name
 }

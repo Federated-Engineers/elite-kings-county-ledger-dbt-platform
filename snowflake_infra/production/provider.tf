@@ -15,7 +15,8 @@ terraform {
 provider "snowflake" {
 
   preview_features_enabled = ["snowflake_storage_integration_aws_resource",
-  "snowflake_file_format_resource"]
+    "snowflake_file_format_resource",
+  "snowflake_stage_external_s3_resource"]
 }
 
 provider "aws" {

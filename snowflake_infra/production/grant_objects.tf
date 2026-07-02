@@ -1,3 +1,27 @@
+resource "snowflake_grant_privileges_to_account_role" "ecs_external_table_existing" {
+  account_role_name = snowflake_account_role.ecs.name
+  privileges        = ["SELECT"]
+
+  on_schema_object {
+    all {
+      object_type_plural = "EXTERNAL TABLES"
+      in_schema          = "PROD_DB.BRONZE"
+    }
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "ecs_external_table_future" {
+  account_role_name = snowflake_account_role.ecs.name
+  privileges        = ["SELECT"]
+
+  on_schema_object {
+    future {
+      object_type_plural = "EXTERNAL TABLES"
+      in_schema          = "PROD_DB.BRONZE"
+    }
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "ecs_all_tables_existing" {
   account_role_name = snowflake_account_role.ecs.name
   privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
