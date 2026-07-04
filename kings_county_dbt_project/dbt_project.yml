@@ -12,5 +12,4 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   elite_kings_county_ledger_dbt:
     silver:
-      +schema: silver
       +materialized: table

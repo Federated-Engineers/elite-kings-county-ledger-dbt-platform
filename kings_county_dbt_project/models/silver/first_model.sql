@@ -1,7 +1,6 @@
 SELECT
-    customerid,
-    firstname,
-    lastname
-FROM sleekmart_oms.l1_landing.customers
-ORDER BY customerid
-LIMIT 10
+    customer_id,
+    full_name
+FROM prod_db.bronze."customers"
+ORDER BY customer_id
+LIMIT 10;
