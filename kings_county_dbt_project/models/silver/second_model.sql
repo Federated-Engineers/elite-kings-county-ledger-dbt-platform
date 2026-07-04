@@ -1,4 +1,6 @@
 SELECT
-    city,
-    zipcode
-FROM sleekmart_oms.l1_landing.customers
+    account_id,
+    business_name
+FROM prod_db.bronze."accounts"
+ORDER BY account_id
+LIMIT 10;
