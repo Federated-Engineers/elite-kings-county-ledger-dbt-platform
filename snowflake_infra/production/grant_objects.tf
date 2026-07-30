@@ -48,7 +48,7 @@ resource "snowflake_grant_privileges_to_account_role" "ecs_all_tables_future" {
 
 resource "snowflake_grant_privileges_to_account_role" "ecs_all_views_existing" {
   account_role_name = snowflake_account_role.ecs.name
-  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
+  privileges        = ["SELECT"]
 
   on_schema_object {
     all {
@@ -60,7 +60,7 @@ resource "snowflake_grant_privileges_to_account_role" "ecs_all_views_existing" {
 
 resource "snowflake_grant_privileges_to_account_role" "ecs_all_views_future" {
   account_role_name = snowflake_account_role.ecs.name
-  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
+  privileges        = ["SELECT"]
 
   on_schema_object {
     future {
