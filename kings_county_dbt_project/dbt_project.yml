@@ -17,4 +17,12 @@ models:
 
     gold:
       +schema: GOLD
-      +materialized: table
+      
+      dimensions:
+        +materialized: table
+
+      facts:
+        +materialized: table
+
+      marts:
+        +materialized: table
