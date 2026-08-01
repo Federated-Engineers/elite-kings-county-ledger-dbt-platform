@@ -6,5 +6,5 @@ SELECT
     payout_status,
     destination_bank_reference,
     fee_deducted_in_cents
-    
+
 FROM {{ ref('stg_payouts') }}

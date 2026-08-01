@@ -1,0 +1,253 @@
+version: 2
+
+models:
+  # Dimensions
+  ####################################################################
+
+  - name: dim_accounts
+    description:
+      Dimension table containing descriptive information about merchant
+      accounts. One row represents one merchant account and is used to
+      provide business context to fact tables.
+
+    columns:
+      - name: account_id
+        description: Unique identifier for the merchant account.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: business_name
+        description: Registered business name.
+
+      - name: country_code
+        description: ISO country code where the merchant operates.
+
+      - name: default_currency
+        description: Default currency used by the merchant.
+
+      - name: industry_type
+        description: Merchant industry classification.
+
+      - name: account_status
+        description: Current operational status of the merchant account.
+
+      - name: onboarding_date
+        description: Date the merchant account was onboarded.
+
+
+  - name: dim_customers
+    description:
+      Dimension table containing descriptive information about customers.
+      One row represents one customer.
+
+    columns:
+      - name: customer_id
+        description: Unique identifier for the customer.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account associated with the customer.
+
+      - name: email
+        description: Customer email address.
+
+      - name: full_name
+        description: Customer's full name.
+
+      - name: is_tax_exempt
+        description: Indicates whether the customer is exempt from tax.
+
+      - name: created_at
+        description: Timestamp the customer record was created.
+
+
+  # Facts
+
+  - name: fact_payment_intents
+    description:
+      Fact table containing payment intent transactions.
+      One row represents one payment attempt.
+
+    columns:
+      - name: intent_id
+        description: Unique identifier for the payment intent.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account associated with the payment.
+
+
+      - name: customer_id
+        description: Customer associated with the payment.
+       
+      - name: amount_in_cents
+        description: Payment amount stored in the smallest currency unit.
+
+      - name: currency
+        description: Currency used for the payment.
+
+      - name: payment_status
+        description: Current payment status.
+
+      - name: payment_method_type
+        description: Payment method used for the transaction.
+
+      - name: error_code
+        description:
+          Error returned when the payment failed.
+          Null for successful payments.
+
+      - name: processed_at
+        description: Original payment timestamp.
+
+      - name: processed_date
+        description: Date extracted from processed_at.
+
+      - name: processed_time
+        description: Time extracted from processed_at.
+
+
+  - name: fact_subscriptions
+    description:
+      Fact table containing customer subscription events.
+      One row represents one subscription.
+
+    columns:
+
+      - name: subscription_id
+        description: Unique identifier for the subscription.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account associated with the subscription.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+
+      - name: customer_id
+        description: Customer associated with the subscription.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: plan_id
+        description: Subscription plan identifier.
+
+      - name: subscription_status
+        description: Current subscription status.
+
+      - name: billing_interval
+        description: Billing frequency.
+
+      - name: current_period_start
+        description: Timestamp marking the beginning of the billing period.
+
+      - name: current_period_start_date
+        description: Date extracted from current_period_start.
+
+      - name: current_period_start_time
+        description: Time extracted from current_period_start.
+
+      - name: current_period_end
+        description: Timestamp marking the end of the billing period.
+
+      - name: current_period_end_date
+        description: Date extracted from current_period_end.
+
+      - name: current_period_end_time
+        description: Time extracted from current_period_end.
+
+      - name: canceled_at
+        description: Timestamp the subscription was cancelled.
+
+      - name: canceled_date
+        description: Date extracted from canceled_at.
+
+      - name: canceled_time
+        description: Time extracted from canceled_at.
+
+
+  - name: fact_payouts
+    description:
+      Fact table containing merchant payout events.
+      One row represents one payout.
+
+    columns:
+      - name: payout_id
+        description: Unique identifier for the payout.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account receiving the payout.
+
+      - name: amount_in_cents
+        description: Gross payout amount.
+
+      - name: arrival_date
+        description: Date the payout arrived or is expected to arrive.
+
+      - name: payout_status
+        description: Current payout status.
+
+      - name: destination_bank_reference
+        description: Bank reference for the destination account.
+
+      - name: fee_deducted_in_cents
+        description: Fee deducted from the payout.
+
+
+  # Marts
+
+  - name: mart_revenue_health
+    description:
+      Business-ready mart that reports Total Processing Volume (TPV)
+      by merchant account and payment method over the previous
+      thirty days.
+
+    columns:
+      - name: account_id
+        description: Merchant account identifier.
+
+      - name: business_name
+        description: Merchant business name.
+
+      - name: payment_method_type
+        description: Payment method used.
+
+      - name: tpv
+        description: Total Processing Volume in major currency units.
+
+
+  - name: mart_customer_retention
+    description:
+      Business-ready mart identifying customers whose subscriptions
+      are past due but who have successfully completed a payment
+      within the previous twenty-four hours.
+
+    columns:
+      - name: customer_id
+        description: Customer identifier.
+
+      - name: full_name
+        description: Customer full name.
+
+      - name: subscription_status
+        description: Current subscription status.
+
+      - name: processed_at
+        description: Timestamp of the successful payment.

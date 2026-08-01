@@ -6,13 +6,13 @@ SELECT
     subscription_status,
     billing_interval,
     current_period_start,
-    current_period_start::date as current_period_start_date,
-    current_period_start::time as current_period_start_time,
+    current_period_start::date AS current_period_start_date,
+    current_period_start::time AS current_period_start_time,
     current_period_end,
-    current_period_end::date as current_period_end_date,
-    current_period_end::time as current_period_end_time,
+    current_period_end::date AS current_period_end_date,
+    current_period_end::time AS current_period_end_time,
     canceled_at,
-    canceled_at::date as canceled_date,
-    canceled_at::time as canceled_time
+    canceled_at::date AS canceled_date,
+    canceled_at::time AS canceled_time
 
-from {{ ref('stg_subscriptions') }}
+FROM {{ ref('stg_subscriptions') }}

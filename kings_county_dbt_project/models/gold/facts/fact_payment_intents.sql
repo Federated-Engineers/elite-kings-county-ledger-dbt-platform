@@ -8,7 +8,7 @@ SELECT
     payment_method,
     error_code,
     processed_at,
-    processed_at::date as processed_date,
-    processed_at::time as processed_time
+    processed_at::date AS processed_date,
+    processed_at::time AS processed_time
 
 FROM {{ ref('stg_payment_intents') }}
