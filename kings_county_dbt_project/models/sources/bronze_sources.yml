@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: Raw JSON files in the bronze schema gotten from Snowflake 
+      external tables through S3 storage integration.
+
+    database: PROD_DB
+    schema: BRONZE
+
+    quoting:
+      database: false
+      schema: false
+      identifier: true
+
+    tables:
+      - name: accounts
+        description: Raw merchant account records from S3.
+
+      - name: customers
+        description: Raw customer records from S3.
+
+      - name: payment_intents
+        description: Raw payment intent records from S3.
+
+      - name: subscriptions
+        description: Raw subscription records from S3.
+
+      - name: payouts
+        description: Raw payout records from S3.

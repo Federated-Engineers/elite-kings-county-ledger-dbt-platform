@@ -1,0 +1,236 @@
+version: 2
+
+models:
+  # Accounts
+
+  - name: stg_accounts
+    description: Cleaned merchant account records from the Bronze layer.
+      One row represents one merchant account.
+
+    columns:
+      - name: account_id
+        description: Unique identifier for the merchant account.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: business_name
+        description: Registered business name.
+
+      - name: country_code
+        description: ISO country code of the merchant.
+
+      - name: default_currency
+        description: Default transaction currency.
+
+      - name: account_status
+        description: Current status of the merchant account.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - restricted
+                  - active
+                  - pending_verification
+
+      - name: onboarding_date
+        description: Date the merchant account was onboarded.
+
+      - name: industry_type
+        description: Merchant industry classification.
+
+
+  # Customers
+
+  - name: stg_customers
+    description: Cleaned customer records from the Bronze layer.
+      One row represents one customer.
+
+    columns:
+      - name: customer_id
+        description: Unique identifier for the customer.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account that owns the customer.
+        data_tests:
+          - not_null
+
+      - name: email
+        description: Customer email address.
+
+      - name: full_name
+        description: Customer's full name.
+
+      - name: source
+        description: How the customer was created (e.g. web_signup)
+
+      - name: tier
+        description: Tier the customer belongs to.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - bronze
+                  - silver
+                  - gold
+
+      - name: is_tax_exempt
+        description: Indicates whether the customer is tax exempt.
+
+      - name: created_at
+        description: Timestamp the customer record was created.
+
+
+  # Payment Intents
+ 
+  - name: stg_payment_intents
+    description: Cleaned payment intent records.
+      One row represents one payment intent.
+
+    columns:
+      - name: payment_intent_id
+        description: Unique identifier for the payment intent.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account associated with the payment.
+
+      - name: customer_id
+        description: Customer making the payment.
+
+      - name: amount_in_cents
+        description: Payment amount stored in the smallest currency unit.
+
+      - name: currency
+        description: Currency used for the payment.
+
+      - name: payment_status
+        description: Current payment status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - failed
+                  - processing
+                  - succeeded
+
+      - name: payment_method_type
+        description: Payment method used for the transaction.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - card
+                  - ach_debit
+                  - apple_pay
+
+      - name: error_code
+        description: Error returned by the payment processor when a payment fails.
+          Null for successful payments.
+
+      - name: processed_at
+        description: Timestamp the payment was processed.
+
+
+  # Payouts
+
+  - name: stg_payouts
+    description: Cleaned payout records.
+      One row represents one payout.
+
+    columns:
+      - name: payout_id
+        description: Unique identifier for the payout.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account receiving the payout.
+
+      - name: amount_in_cents
+        description: Gross payout amount in the smallest currency unit.
+
+      - name: arrival_date
+        description: Date the payout arrived or is expected to arrive.
+
+      - name: payout_status
+        description: Current payout status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - pending
+                  - paid
+                  - in_transit
+                  - failed
+
+      - name: destination_bank_reference
+        description: Bank account reference receiving the payout.
+
+      - name: fee_deducted_in_cents
+        description: Processing fee deducted from the payout.
+
+
+  # Subscriptions
+
+  - name: stg_subscriptions
+    description: Cleaned subscription records.
+      One row represents one subscription.
+
+    columns:
+      - name: subscription_id
+        description: Unique identifier for the subscription.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: Merchant account associated with the subscription.
+
+      - name: customer_id
+        description: Customer who owns the subscription.
+
+      - name: plan_id
+        description: Subscription plan identifier.
+
+      - name: subscription_status
+        description: Current subscription status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - canceled
+                  - past_due
+                  - active
+
+      - name: billing_interval
+        description: Billing frequency of the subscription.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: 
+                  - month
+                  - year
+
+      - name: current_period_start
+        description: Beginning of the current billing period.
+
+      - name: current_period_end
+        description: End of the current billing period.
+
+      - name: canceled_at
+        description: Timestamp the subscription was cancelled.
+          Null if the subscription is still active.
