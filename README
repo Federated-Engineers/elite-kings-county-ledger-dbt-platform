@@ -1,0 +1,366 @@
+# Elite Kings County Ledger dbt Platform
+
+A analytical data platform for the client Kings County. This repository combines a dbt project, Terraform-managed Snowflake provisioning, and CI automation to deliver a repeatable, production-oriented data platform for analytical workflows.
+
+![Architecture Diagram](images/architecture.png)
+
+## Overview
+
+This project models a layered analytics architecture for a payments and subscriptions domain. It ingests raw data into a bronze landing area, transforms it into curated silver models, and produces business-facing gold dimension, fact, and mart tables for operational and executive analytics.
+
+The repository includes:
+
+- A dbt project for modeling and transformations
+- Snowflake infrastructure-as-code using Terraform
+- CI validation for SQL and Terraform changes
+- A Docker-based execution path for running dbt in a consistent environment
+
+## Business Context
+
+The project is centered on merchant account, customer, payment intent, subscription, and payout data. It is designed to support use cases including:
+
+- Merchant account intelligence
+- Customer lifecycle tracking
+- Payment performance monitoring
+- Subscription health and churn analysis
+- Payout reconciliation and operational oversight
+- Executive reporting via business marts
+
+## Repository Structure
+
+```text
+.
+├── .github/
+│   ├── CODEOWNERS
+│   └── workflows/
+│       ├── cd.yaml
+│       ├── ci.yaml
+│       └── terraform_ci.yaml
+├── .dockerignore
+├── .gitignore
+├── .sqlfluff
+├── Dockerfile
+├── requirements.txt
+├── requirements-dev.txt
+├── run_dbt.sh
+├── kings_county_dbt_project/
+│   ├── dbt_project.yml
+│   ├── profiles.yml
+│   ├── macros/
+│   └── models/
+│       ├── gold/
+│       │   ├── dimensions/
+│       │   ├── facts/
+│       │   ├── marts/
+│       │   └── gold.yml
+│       ├── silver/
+│       │   ├── silver.yml
+│       │   ├── stg_accounts.sql
+│       │   ├── stg_customers.sql
+│       │   ├── stg_payment_intents.sql
+│       │   ├── stg_payouts.sql
+│       │   └── stg_subscriptions.sql
+│       └── sources/
+│           └── bronze_sources.yml
+└── snowflake_infra/
+    ├── modules/
+    │   ├── database/
+    │   ├── users/
+    │   └── warehouse/
+    └── production/
+        ├── backend.tf
+        ├── data.tf
+        ├── database.tf
+        ├── external_tables.tf
+        ├── grant_database.tf
+        ├── grant_objects.tf
+        ├── grant_schemas.tf
+        ├── grant_warehouses.tf
+        ├── grants_roles.tf
+        ├── provider.tf
+        ├── roles.tf
+        ├── storage_integration.tf
+        ├── user.tf
+        └── warehouses.tf
+```
+
+## Architecture
+
+This repository follows a layered warehouse architecture with Snowflake as the platform backbone:
+
+```text
+S3 / External Raw Data
+        ↓
+Bronze sources (external tables)
+        ↓
+Silver staging models
+        ↓
+Gold dimensions, facts, and marts
+        ↓
+Analytics dashboards / business reporting
+```
+
+### Layering model
+
+- Bronze: raw external tables defined in `models/sources/bronze_sources.yml`
+- Silver: curated staging objects such as `stg_accounts.sql`, `stg_customers.sql`, `stg_payment_intents.sql`, `stg_subscriptions.sql`, and `stg_payouts.sql`
+- Gold: modeled for reporting and analysis, including dimensions, facts, and marts
+
+### Key dbt project settings
+
+The project is configured in `kings_county_dbt_project/dbt_project.yml`:
+
+- Project name: `elite_kings_county_ledger_dbt`
+- Profile: `elite-kings-county-ledger-dbt`
+- Model paths: `models`
+- Silver models are materialized as tables in the `SILVER` schema
+- Gold dimensions and facts are materialized as tables in the `GOLD` schema
+
+## Data Model
+
+The warehouse defines a domain model around several core entities.
+
+### Source tables
+
+The bronze source layer expects the following raw data sets:
+
+- `accounts`
+- `customers`
+- `payment_intents`
+- `subscriptions`
+- `payouts`
+
+These are mapped to the `PROD_DB.BRONZE` schema in Snowflake via the source configuration.
+
+### Silver models
+
+The staging layer standardizes and cleans the raw data sources:
+
+- `stg_accounts.sql`
+- `stg_customers.sql`
+- `stg_payment_intents.sql`
+- `stg_payouts.sql`
+- `stg_subscriptions.sql`
+
+These models are used to build consistent analytics dimensions and facts.
+
+### Gold models
+
+The gold layer includes:
+
+- Dimensions: `dim_accounts`, `dim_customers`
+- Facts: `fact_payment_intents`, `fact_subscriptions`, `fact_payouts`
+- Marts: `mart_revenue_health`, `mart_customer_retention`
+
+The project includes schema-level data tests for keys and relationships, such as uniqueness and not-null constraints and matching foreign keys.
+
+## Infrastructure
+
+The repository provisions Snowflake infrastructure using Terraform under `snowflake_infra/production`.
+
+### Terraform responsibilities
+
+- Database creation
+- Schema creation
+- Role and user provisioning
+- Warehouse configuration
+- Storage integration setup
+- External table definitions and grants
+- Database and object access grants
+
+### Core module organization
+
+- `snowflake_infra/modules/database` creates the database and schemas
+- `snowflake_infra/modules/users` manages user definitions
+- `snowflake_infra/modules/warehouse` handles warehouse resources
+
+### Example Terraform pattern
+
+The database module creates a Snowflake database and schema resources using variables, for example:
+
+```hcl
+resource "snowflake_database" "db" {
+  name      = var.database_name
+  log_level = "INFO"
+  comment   = "Production database"
+}
+```
+
+## Prerequisites
+
+Before running the project locally, ensure you have:
+
+- Python 3.12+
+- `pip` and virtual environment support
+- Access to a Snowflake account
+- Required Snowflake credentials and role permissions
+- `dbt` experience and familiarity with Snowflake environment variables
+
+## Environment Variables
+
+The dbt profile expects the following environment variables to be set:
+
+- `account`
+- `database`
+- `user`
+- `ELITE_KINGS_COUNTY_SNOWFLAKE_PASSWORD`
+- `role`
+- `schema`
+- `warehouse`
+
+Example shell configuration:
+
+```bash
+export account="your_account"
+export database="PROD_DB"
+export user="your_user"
+export ELITE_KINGS_COUNTY_SNOWFLAKE_PASSWORD="your_password"
+export role="ACCOUNTADMIN"
+export schema="PUBLIC"
+export warehouse="COMPUTE_WH"
+```
+
+## Getting Started
+
+### 1. Install Python dependencies
+
+```bash
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+The main runtime dependency is:
+
+```text
+dbt-snowflake==1.11.4
+```
+
+### 2. Validate dbt profile setup
+
+The project profile is defined in `kings_county_dbt_project/profiles.yml` and references the environment variables above.
+
+### 3. Install dbt dependencies
+
+```bash
+dbt deps --project-dir kings_county_dbt_project --profiles-dir kings_county_dbt_project
+```
+
+### 4. Run the project
+
+The repository includes a convenience script:
+
+```bash
+./run_dbt.sh
+```
+
+This script performs:
+
+```bash
+dbt deps --project-dir kings_county_dbt_project --profiles-dir kings_county_dbt_project
+dbt run --project-dir kings_county_dbt_project --profiles-dir kings_county_dbt_project
+```
+
+## Docker Usage
+
+A Dockerfile is provided for standardizing execution in a container:
+
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /usr/dbt_src
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY kings_county_dbt_project/ ./kings_county_dbt_project/
+COPY run_dbt.sh .
+RUN chmod +x run_dbt.sh
+CMD ["./run_dbt.sh"]
+```
+
+You can build and run the container as follows:
+
+```bash
+docker build -t elite-kings-county-ledger-dbt .
+docker run --rm -e account="..." -e database="..." -e user="..." -e ELITE_KINGS_COUNTY_SNOWFLAKE_PASSWORD="..." -e role="..." -e schema="..." -e warehouse="..." elite-kings-county-ledger-dbt
+```
+
+## SQL Linting and Quality Controls
+
+This project uses SQLFluff to enforce consistent SQL formatting and style.
+
+Configuration is in `.sqlfluff` and includes:
+
+- Snowflake dialect
+- Jinja templating support
+- SQLFluff formatting rules such as uppercase keywords and trailing commas
+- Max line length set to 80
+
+Example lint command:
+
+```bash
+sqlfluff lint kings_county_dbt_project/models/
+```
+
+## CI/CD
+
+The repository includes GitHub Actions workflows for validation and deployment:
+
+### CI workflow
+
+`.github/workflows/ci.yaml`
+
+Runs on pull requests affecting SQL and dbt files.
+
+Checks:
+
+- Python setup
+- Dependency installation
+- `sqlfluff lint` on `kings_county_dbt_project/models/`
+
+### Terraform CI workflow
+
+`.github/workflows/terraform_ci.yaml`
+
+Runs for pull requests affecting the Snowflake infrastructure files.
+
+Checks:
+
+- `terraform fmt`
+- `terraform validate`
+
+### Deployment workflow
+
+`.github/workflows/cd.yaml`
+
+Provides continuous deployment automation, though the specific deployment behavior should be reviewed in the workflow definition for your environment.
+
+## Security and Operational Notes
+
+- Store credentials as environment variables, not hard-coded values in source files.
+- Treat Snowflake credentials and admin roles with strict least-privilege principles.
+- Review Terraform grants and role assignments before production use.
+- Validate external table definitions and storage integration settings before running in a fresh environment.
+
+## Common Development Tasks
+
+### Run only dbt deps
+
+```bash
+dbt deps --project-dir kings_county_dbt_project --profiles-dir kings_county_dbt_project
+```
+
+### Run the full transformation pipeline
+
+```bash
+dbt run --project-dir kings_county_dbt_project --profiles-dir kings_county_dbt_project
+```
+
+### Lint SQL files
+
+```bash
+sqlfluff lint kings_county_dbt_project/models/
+```
+
+## Notes
+
+This repository is dependent on two other repos
+- https://github.com/Federated-Engineers/elite-airflow
+- https://github.com/Federated-Engineers/elite-cloud-infrastructures 
