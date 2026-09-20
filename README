@@ -2,6 +2,8 @@
 
 A analytical data platform for the client Kings County. This repository combines a dbt project, Terraform-managed Snowflake provisioning, and CI automation to deliver a repeatable, production-oriented data platform for analytical workflows.
 
+![Architecture Diagram](images/architecture.png)
+
 ## Overview
 
 This project models a layered analytics architecture for a payments and subscriptions domain. It ingests raw data into a bronze landing area, transforms it into curated silver models, and produces business-facing gold dimension, fact, and mart tables for operational and executive analytics.
