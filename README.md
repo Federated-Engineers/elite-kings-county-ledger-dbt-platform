@@ -1,6 +1,6 @@
 # Elite Kings County Ledger dbt Platform
 
-A analytical data platform for the client Kings County. This repository combines a dbt project, Terraform-managed Snowflake provisioning, and CI automation to deliver a repeatable, production-oriented data platform for analytical workflows.
+An analytical data platform for the client Kings County. This repository combines a dbt project, Terraform-managed Snowflake provisioning, and CI automation to deliver a repeatable, production-oriented data platform for analytical workflows.
 
 ![Architecture Diagram](images/architecture.png)
 
